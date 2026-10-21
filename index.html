@@ -133,6 +133,7 @@ section.view{display:flex;flex-direction:column;gap:26px}
 ul.reasons{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px}
 .sog-line{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .sog-line .v{font-family:var(--f-display);font-weight:700;font-size:26px;color:var(--blue);font-variant-numeric:tabular-nums}
+.sog-line .v.pt{color:var(--good)}
 .sog-line .k{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .watch{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:auto}
 .watch b{color:var(--ink);font-weight:600}
@@ -264,9 +265,9 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
       <p class="label">Pick tracker</p>
       <div class="board">
         <div class="boardcard tracker" id="trkNhl">
-          <div class="trk-head"><span class="lg NHL">NHL</span><span class="k">Goal &amp; shot picks</span></div>
+          <div class="trk-head"><span class="lg NHL">NHL</span><span class="k">Goal, shot &amp; points picks</span></div>
           <div class="record trk-stats"><div class="stat"><div class="v">—</div><div class="k">Loading</div></div></div>
-          <div class="ledger"><table><thead><tr><th>Night</th><th>Goal</th><th>Shots</th><th>Hit</th></tr></thead><tbody></tbody></table></div>
+          <div class="ledger"><table><thead><tr><th>Night</th><th>Goal</th><th>Shots</th><th>Points</th><th>Hit</th></tr></thead><tbody></tbody></table></div>
           <button class="go" data-goto="nhl">Open NHL picks</button>
         </div>
         <div class="boardcard tracker nfl" id="trkNfl">
@@ -298,7 +299,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   <!-- NHL -->
   <section class="view" id="view-nhl" role="tabpanel" aria-labelledby="tab-nhl" hidden>
     <div class="tabhead">
-      <div><h2>NHL picks of the day</h2><p id="nhlSub">The two or three most probable goal scorers plus three shot picks, from matchups and recent trends.</p></div>
+      <div><h2>NHL picks of the day</h2><p id="nhlSub">The two or three most probable goal scorers, three shot picks and up to five players to get a point, from matchups and recent trends.</p></div>
       <label class="pickday" for="nhlNight">Night <select id="nhlNight" disabled><option>Loading…</option></select></label>
     </div>
     <div id="nhlMain"><div class="empty"><h2>Waiting for tonight's sheet</h2><p>Picks appear here once the daily analysis runs in the afternoon.</p></div></div>
@@ -424,7 +425,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   const nhlGoalRes={"scored":["Scored","good"],"no-goal":["No goal","bad"],"dnp":["Did not play","pend"],"pending":["Pending","pend"]};
   const sogRes={"hit":["Hit","good"],"miss":["Missed","bad"],"dnp":["Did not play","pend"],"pending":["Pending","pend"]};
   const nflRes={"hit":["Hit","good"],"miss":["Missed","bad"],"push":["Push","pend"],"void":["Void","pend"],"pending":["Pending","pend"]};
-  function nhlTally(){let gh=0,gm=0,sh=0,sm=0;nights.forEach(n=>{(n.picks||[]).forEach(p=>{if(p.result==="scored")gh++;else if(p.result==="no-goal")gm++;});(n.sogPicks||[]).forEach(p=>{if(p.result==="hit")sh++;else if(p.result==="miss")sm++;});});return{gh,gm,sh,sm};}
+  function nhlTally(){let gh=0,gm=0,sh=0,sm=0,ph=0,pm=0;nights.forEach(n=>{(n.picks||[]).forEach(p=>{if(p.result==="scored")gh++;else if(p.result==="no-goal")gm++;});(n.sogPicks||[]).forEach(p=>{if(p.result==="hit")sh++;else if(p.result==="miss")sm++;});(n.pointsPicks||[]).forEach(p=>{if(p.result==="hit")ph++;else if(p.result==="miss")pm++;});});return{gh,gm,sh,sm,ph,pm};}
   function nflTally(){let h=0,m=0;nflDays.forEach(d=>(d.picks||[]).forEach(p=>{if(p.result==="hit")h++;else if(p.result==="miss")m++;}));return{h,m};}
   function tdTally(){let h=0,m=0,n=0;nflDays.forEach(d=>(d.tdPicks||[]).forEach(p=>{n++;if(p.result==="hit")h++;else if(p.result==="miss")m++;}));return{h,m,n};}
 
@@ -435,13 +436,14 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   function renderTracker(){
     // NHL
     const tn=$("#trkNhl"),t=nhlTally(),tg=t.gh+t.gm+t.sh+t.sm;
-    tn.querySelector(".trk-stats").innerHTML=`<div class="stat"><div class="v">${t.gh+t.sh}–${t.gm+t.sm}</div><div class="k">Overall · ${pct(t.gh+t.sh,t.gm+t.sm)}</div></div><div class="stat"><div class="v">${t.gh}–${t.gm}</div><div class="k">Goal · ${pct(t.gh,t.gm)}</div></div><div class="stat"><div class="v">${t.sh}–${t.sm}</div><div class="k">Shots · ${pct(t.sh,t.sm)}</div></div>`;
+    tn.querySelector(".trk-stats").innerHTML=`<div class="stat"><div class="v">${t.gh+t.sh+t.ph}–${t.gm+t.sm+t.pm}</div><div class="k">Overall · ${pct(t.gh+t.sh+t.ph,t.gm+t.sm+t.pm)}</div></div><div class="stat"><div class="v">${t.gh}–${t.gm}</div><div class="k">Goal · ${pct(t.gh,t.gm)}</div></div><div class="stat"><div class="v">${t.sh}–${t.sm}</div><div class="k">Shots · ${pct(t.sh,t.sm)}</div></div>${(t.ph+t.pm)?`<div class="stat"><div class="v">${t.ph}–${t.pm}</div><div class="k">Points · ${pct(t.ph,t.pm)}</div></div>`:""}`;
     tn.querySelector("tbody").innerHTML=nights.length?nights.slice(0,10).map(n=>{
       const g=(n.picks||[]).slice().sort((a,b)=>a.rank-b.rank).map(p=>({r:p.result||"pending",label:`${p.player} to score`}));
       const s=(n.sogPicks||[]).slice().sort((a,b)=>a.rank-b.rank).map(p=>({r:p.result||"pending",label:`${p.player} ${p.line||"SOG"}`}));
-      const all=g.concat(s),done=all.filter(x=>pipCls(x.r)!=="pend"),hit=done.filter(x=>pipCls(x.r)==="good").length;
-      return `<tr data-day="${esc(n.date)}" tabindex="0"><td>${esc(fmtDate(n.date))}</td><td>${pips(g)}</td><td>${pips(s)}</td><td class="hit">${done.length?`${hit}/${done.length}`:"—"}</td></tr>`;
-    }).join(""):`<tr><td colspan="4">No nights yet.</td></tr>`;
+      const q=(n.pointsPicks||[]).slice().sort((a,b)=>a.rank-b.rank).map(p=>({r:p.result||"pending",label:`${p.player} ${p.line||"1+ point"}`}));
+      const all=g.concat(s,q),done=all.filter(x=>pipCls(x.r)!=="pend"),hit=done.filter(x=>pipCls(x.r)==="good").length;
+      return `<tr data-day="${esc(n.date)}" tabindex="0"><td>${esc(fmtDate(n.date))}</td><td>${pips(g)}</td><td>${pips(s)}</td><td>${q.length?pips(q):'<span class="kind">—</span>'}</td><td class="hit">${done.length?`${hit}/${done.length}`:"—"}</td></tr>`;
+    }).join(""):`<tr><td colspan="5">No nights yet.</td></tr>`;
     // NFL
     const tf=$("#trkNfl"),f=nflTally();
     const graded=[];nflDays.forEach(d=>(d.picks||[]).forEach(p=>{if(p.result==="hit"||p.result==="miss")graded.push(+p.prob||0)}));
@@ -481,10 +483,11 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
     if(!n){main.innerHTML=`<div class="empty"><h2>Waiting for tonight's sheet</h2><p>Picks appear here once the daily analysis runs in the afternoon.</p></div>`;return;}
     const slate=(n.slate||[]).map(g=>`<div class="game"><div class="m">${esc(g.away)}<em>@</em>${esc(g.home)}</div><div class="t">${esc(g.time||"")}</div>${g.note?`<div class="n">${esc(g.note)}</div>`:""}</div>`).join("");
     const chip=(p,map,extra)=>{const r=p.result||"pending";if(r==="pending")return"";const[t,c]=map[r]||[r,"pend"];return `<span class="chip ${c}">${esc(t)}${extra||""}</span>`;};
+    const pchip=p=>p.prob!=null?`<span class="chip">${Math.round(+p.prob*100)}%${p.fair?` · bet at ${esc(p.fair)}`:""}</span>`:"";
     const picks=(n.picks||[]).slice().sort((a,b)=>a.rank-b.rank).map((p,i)=>`
       <article class="pick${i===0?" top":""}">
         <div class="pick-head"><div class="rank">${esc(p.rank)}</div><div class="who"><h3>${esc(p.player)}</h3><div class="ctx">${esc(p.team)} ${p.home?"vs":"@"} ${esc(p.opp)} · ${esc(p.gameTime||"")}</div></div></div>
-        <div class="chips">${p.confidence?`<span class="chip conf-${esc(p.confidence)}">${esc(p.confidence)}</span>`:""}${chip(p,nhlGoalRes)}</div>
+        <div class="chips">${p.confidence?`<span class="chip conf-${esc(p.confidence)}">${esc(p.confidence)}</span>`:""}${pchip(p)}${chip(p,nhlGoalRes)}</div>
         <ul class="reasons">${(p.reasons||[]).map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
         ${p.watch?`<div class="watch"><b>Check before puck drop:</b> ${esc(p.watch)}</div>`:""}
       </article>`).join("");
@@ -492,30 +495,42 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
       <article class="pick">
         <div class="pick-head"><div class="rank" style="color:var(--blue)">${esc(p.rank)}</div><div class="who"><h3>${esc(p.player)}</h3><div class="ctx">${esc(p.team)} ${p.home?"vs":"@"} ${esc(p.opp)} · ${esc(p.gameTime||"")}</div></div></div>
         <div class="sog-line"><span class="v">${esc(p.line||"")}</span>${p.avg!=null?`<span class="k">avg ${esc(p.avg)} SOG/gm</span>`:""}</div>
-        <div class="chips">${p.confidence?`<span class="chip conf-${esc(p.confidence)}">${esc(p.confidence)}</span>`:""}${chip(p,sogRes,p.actual!=null?` · ${esc(p.actual)} SOG`:"")}</div>
+        <div class="chips">${p.confidence?`<span class="chip conf-${esc(p.confidence)}">${esc(p.confidence)}</span>`:""}${pchip(p)}${chip(p,sogRes,p.actual!=null?` · ${esc(p.actual)} SOG`:"")}</div>
         <ul class="reasons">${(p.reasons||[]).map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
         ${p.watch?`<div class="watch"><b>Check before puck drop:</b> ${esc(p.watch)}</div>`:""}
       </article>`).join("");
+    const ptsList=(n.pointsPicks||[]).slice().sort((a,b)=>a.rank-b.rank);
+    const pts=ptsList.map(p=>`
+      <article class="pick">
+        <div class="pick-head"><div class="rank" style="color:var(--good)">${esc(p.rank)}</div><div class="who"><h3>${esc(p.player)}</h3><div class="ctx">${esc(p.team)} ${p.home?"vs":"@"} ${esc(p.opp)} · ${esc(p.gameTime||"")}</div></div></div>
+        <div class="sog-line"><span class="v pt">${esc(p.line||"1+ point")}</span>${p.avg!=null?`<span class="k">avg ${esc(p.avg)} pts/gm</span>`:""}</div>
+        <div class="chips">${p.confidence?`<span class="chip conf-${esc(p.confidence)}">${esc(p.confidence)}</span>`:""}${pchip(p)}${chip(p,sogRes,p.actual!=null?` · ${esc(p.actual)} pts`:"")}</div>
+        <ul class="reasons">${(p.reasons||[]).map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
+        ${p.watch?`<div class="watch"><b>Check before puck drop:</b> ${esc(p.watch)}</div>`:""}
+      </article>`).join("");
+    const ptsHtml=(n.pointsPicks||n.pointsNote)?`<div><p class="label">Player points · ${ptsList.length?`${ptsList.length} at 60%+`:"no one clears 60% tonight"}</p>${pts?`<div class="picks">${pts}</div>`:""}${n.pointsNote?`<p class="foot" style="margin-top:10px">${esc(n.pointsNote)}</p>`:""}</div>`:"";
     const fades=(n.fades||[]).map(f=>`<li><b>${esc(f.player)}</b>: ${esc(f.reason)}</li>`).join("");
     main.innerHTML=`<div style="display:flex;flex-direction:column;gap:26px">
       <div><p class="label">The slate · ${esc(fmtDate(n.date))}</p><div class="slate">${slate||'<div class="game"><div class="n">No games listed.</div></div>'}</div></div>
       <div><p class="label">Most probable goal scorers · ${(n.picks||[]).length} with an edge</p><div class="picks">${picks}</div></div>
       ${sog?`<div><p class="label">Top three shots-on-goal picks</p><div class="picks">${sog}</div></div>`:""}
+      ${ptsHtml}
       <div class="cols"><div class="panel"><p class="label">Notes on the slate</p><p>${esc(n.notes||"No extra notes tonight.")}</p></div>
       <div class="panel"><p class="label">Left off the list</p>${fades?`<ul class="fades">${fades}</ul>`:"<p>Nobody notable.</p>"}</div></div></div>`;
-    $("#nhlSub").textContent=n.generatedAt?`The two or three most probable goal scorers plus three shot picks, from matchups and recent trends. Last updated ${fmtStamp(n.generatedAt)}.`:"The two or three most probable goal scorers plus three shot picks, from matchups and recent trends.";
+    $("#nhlSub").textContent=`The two or three most probable goal scorers, three shot picks and up to five players to get a point, from matchups and recent trends.${n.generatedAt?` Last updated ${fmtStamp(n.generatedAt)}.`:""}`;
   }
   function renderNhlRecord(){
     const n=nights.find(x=>x.date===nhlCur);
     if(!n){$("#nhlRecordSec").hidden=true;return;}
-    const rows=[];let gh=0,gm=0,sh=0,sm=0;
+    const rows=[];let gh=0,gm=0,sh=0,sm=0,ph=0,pm=0;
     (n.picks||[]).slice().sort((a,b)=>a.rank-b.rank).forEach(p=>{const r=p.result||"pending";if(r==="scored")gh++;else if(r==="no-goal")gm++;const[t,c]=nhlGoalRes[r]||[r,"pend"];rows.push({type:"Goal",rank:p.rank,player:p.player,game:`${p.team} ${p.home?"vs":"@"} ${p.opp}`,c,t});});
     (n.sogPicks||[]).slice().sort((a,b)=>a.rank-b.rank).forEach(p=>{const r=p.result||"pending";if(r==="hit")sh++;else if(r==="miss")sm++;const[t,c]=sogRes[r]||[r,"pend"];rows.push({type:p.line||"SOG",rank:p.rank,player:p.player,game:`${p.team} ${p.home?"vs":"@"} ${p.opp}`,c,t:t+(p.actual!=null?` (${p.actual} SOG)`:"")});});
+    (n.pointsPicks||[]).slice().sort((a,b)=>a.rank-b.rank).forEach(p=>{const r=p.result||"pending";if(r==="hit")ph++;else if(r==="miss")pm++;const[t,c]=sogRes[r]||[r,"pend"];rows.push({type:p.line||"1+ point",rank:p.rank,player:p.player,game:`${p.team} ${p.home?"vs":"@"} ${p.opp}`,c,t:t+(p.actual!=null?` (${p.actual} pts)`:"")});});
     if(!rows.length){$("#nhlRecordSec").hidden=true;return;}
     $("#nhlRecordSec").hidden=false;
     $("#nhlResLabel").textContent=`Results · ${fmtDate(n.date)}`;
-    const graded=gh+gm+sh+sm;
-    $("#nhlRecord").innerHTML=graded?`<div class="stat"><div class="v">${gh}–${gm}</div><div class="k">Goal picks</div></div><div class="stat"><div class="v">${sh}–${sm}</div><div class="k">Shot picks</div></div><div class="stat"><div class="v">${gh+sh} of ${graded}</div><div class="k">Hit this night</div></div>`:`<div class="stat"><div class="k">Graded the next afternoon, after the games finish</div></div>`;
+    const graded=gh+gm+sh+sm+ph+pm;
+    $("#nhlRecord").innerHTML=graded?`<div class="stat"><div class="v">${gh}–${gm}</div><div class="k">Goal picks</div></div><div class="stat"><div class="v">${sh}–${sm}</div><div class="k">Shot picks</div></div>${(ph+pm)?`<div class="stat"><div class="v">${ph}–${pm}</div><div class="k">Points picks</div></div>`:""}<div class="stat"><div class="v">${gh+sh+ph} of ${graded}</div><div class="k">Hit this night</div></div>`:`<div class="stat"><div class="k">Graded the next afternoon, after the games finish</div></div>`;
     $("#nhlLedger").innerHTML=rows.map(x=>`<tr><td>${esc(x.type)}</td><td>${esc(x.rank)}</td><td>${esc(x.player)}</td><td>${esc(x.game)}</td><td class="${x.c}">${esc(x.t)}</td></tr>`).join("");
   }
   function renderNhl(){
@@ -626,8 +641,8 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   $("#ffWeek").addEventListener("change",e=>{ffCur=e.target.value;store.set("gs-ffweek",ffCur);renderFf();});
 
   /* ---------- BET BUILDER ---------- */
-  const KINDS={NHL:[["all","Any"],["goal","Anytime goal"],["sog","Shots on goal"]],NFL:[["all","Any"],["prop","Player props"],["td","Anytime TD"]],both:[["all","Any"],["goal","NHL goal"],["sog","NHL shots"],["prop","NFL props"],["td","NFL TD"]]};
-  const KIND_LABEL={goal:"Goal",sog:"Shots",prop:"Prop",td:"TD"};
+  const KINDS={NHL:[["all","Any"],["goal","Anytime goal"],["sog","Shots on goal"],["pts","Points"]],NFL:[["all","Any"],["prop","Player props"],["td","Anytime TD"]],both:[["all","Any"],["goal","NHL goal"],["sog","NHL shots"],["pts","NHL points"],["prop","NFL props"],["td","NFL TD"]]};
+  const KIND_LABEL={goal:"Goal",sog:"Shots",pts:"Points",prop:"Prop",td:"TD"};
   const PRESETS={straight:["-300","-200","-150","-110","+100","+150"],parlay:["+100","+150","+200","+300","+500","+1000"]};
   const bet={type:store.get("tb-type")||"parlay",sport:store.get("tb-sport")||"both",kinds:(store.get("tb-kinds")||"").split(",").filter(Boolean),odds:{straight:store.get("tb-odds-straight")||"-150",parlay:store.get("tb-odds-parlay")||"+250"},legs:store.get("tb-legs")||"auto",same:store.get("tb-same")==="1"};
   const MINUS=/[−–—]/g;
@@ -648,6 +663,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
         pool.push({sport:"NHL",kind,label,player:p.player,game,gkey:n.date+game,date:n.date,time,prob:pr,why:(p.reasons||[]).slice(-1)[0]||"",watch:p.watch||""});};
       (n.picks||[]).forEach(p=>add(p,"goal",`${p.player} anytime goal`));
       (n.sogPicks||[]).forEach(p=>add(p,"sog",`${p.player} ${p.line||"SOG"}`));
+      (n.pointsPicks||[]).forEach(p=>add(p,"pts",`${p.player} ${p.line||"1+ point"}`));
     });
     nflDays.filter(d=>d.date>=now.date).forEach(d=>{
       const g=gm=>(d.slate||[]).find(s=>`${s.away} @ ${s.home}`===gm)||{};
