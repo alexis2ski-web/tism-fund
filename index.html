@@ -21,6 +21,7 @@
   --lamp:#d62828;        /* goal light (NHL) */
   --field:#2f7a3e;       /* turf (NFL) */
   --blue:#1f4e79;        /* blue line */
+  --pitch:#6b3fa0;       /* soccer */
   --good:#1d7a46; --bad:#a33a2a; --pend:#8a7a2a;
   --f-display:"Times New Roman",Times,"Liberation Serif",serif;
   --f-body:"Times New Roman",Times,"Liberation Serif",serif;
@@ -28,10 +29,10 @@
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0e151c;--surface:#16212b;--ink:#e6edf2;--muted:#93a4b2;--line:#28384a;
-  --lamp:#ff5252;--field:#6fcf86;--blue:#7fb3e6;--good:#5cc98a;--bad:#ff8a73;--pend:#d8c46a;color-scheme:dark}}
+  --lamp:#ff5252;--field:#6fcf86;--blue:#7fb3e6;--pitch:#c3a2f0;--good:#5cc98a;--bad:#ff8a73;--pend:#d8c46a;color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e151c;--surface:#16212b;--ink:#e6edf2;--muted:#93a4b2;--line:#28384a;
-  --lamp:#ff5252;--field:#6fcf86;--blue:#7fb3e6;--good:#5cc98a;--bad:#ff8a73;--pend:#d8c46a;color-scheme:dark}
+  --lamp:#ff5252;--field:#6fcf86;--blue:#7fb3e6;--pitch:#c3a2f0;--good:#5cc98a;--bad:#ff8a73;--pend:#d8c46a;color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
 .wrap{max-width:980px;margin:0 auto;padding-block:24px 56px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
@@ -49,6 +50,7 @@ nav.tabs button:hover{color:var(--ink)}
 nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
 nav.tabs button[data-tab="nhl"][aria-selected="true"]{border-bottom-color:var(--lamp)}
 nav.tabs button[data-tab="nfl"][aria-selected="true"]{border-bottom-color:var(--field)}
+nav.tabs button[data-tab="soc"][aria-selected="true"]{border-bottom-color:var(--pitch)}
 nav.tabs .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:2px}
 select,button{font:inherit}
 select{color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
@@ -61,10 +63,11 @@ select:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-
 section.view{display:flex;flex-direction:column;gap:26px}
 
 /* Home */
-.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:1000px){.board{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){.board{grid-template-columns:1fr}}
 .boardcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0;border-top:4px solid var(--lamp)}
-.boardcard.nfl{border-top-color:var(--field)}
+.boardcard.nfl{border-top-color:var(--field)} .boardcard.soc{border-top-color:var(--pitch)}
 .boardcard .k{font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:14px;color:var(--muted)}
 .boardcard .big{font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1.05;text-transform:uppercase}
 .boardcard .meta{font-size:14px;color:var(--muted)}
@@ -94,7 +97,7 @@ section.view{display:flex;flex-direction:column;gap:26px}
 .news li:last-child{border-bottom:0}
 .news .tagline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .lg{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.06em;padding:1px 7px;border-radius:4px;color:var(--surface);background:var(--lamp)}
-.lg.NFL{background:var(--field)} .lg.Other{background:var(--muted)}
+.lg.NFL{background:var(--field)} .lg.SOC{background:var(--pitch)} .lg.Other{background:var(--muted)}
 .kind{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .news h3{font-size:16px;font-weight:600;margin:0;line-height:1.35}
 .news p{margin:0;font-size:14px;color:var(--ink)}
@@ -160,6 +163,10 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
 .np{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;grid-template-columns:44px minmax(0,1fr) 150px;gap:6px 16px;align-items:start}
 @media (max-width:640px){.np{grid-template-columns:36px minmax(0,1fr)}.np .prob{grid-column:2}}
 .np .rank{color:var(--field);font-size:40px}
+.np.soc .rank{color:var(--pitch)}
+.game .xg{display:flex;gap:10px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;margin-top:6px}
+.game .xg span{border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+.game .xg b{color:var(--pitch);font-weight:700}
 .np h3{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1.05;margin:0;text-transform:uppercase}
 .np .ctx{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:3px}
 .np .body{display:flex;flex-direction:column;gap:10px;min-width:0}
@@ -246,7 +253,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
     <div class="brand">
       <div>
         <h1><span class="n">Tism</span> <span class="f">Fund</span></h1>
-        <p class="sub">Sports headlines plus NHL and NFL picks built from matchups and recent trends.</p>
+        <p class="sub">Sports headlines plus NHL, NFL and soccer picks built from matchups and recent trends.</p>
       </div>
       <div class="today" id="todayStamp"></div>
     </div>
@@ -254,6 +261,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
       <button role="tab" id="tab-home" data-tab="home" aria-controls="view-home" aria-selected="true">Home</button>
       <button role="tab" id="tab-nhl" data-tab="nhl" aria-controls="view-nhl" aria-selected="false"><span class="dot" style="background:var(--lamp)"></span>NHL picks</button>
       <button role="tab" id="tab-nfl" data-tab="nfl" aria-controls="view-nfl" aria-selected="false"><span class="dot" style="background:var(--field)"></span>NFL picks</button>
+      <button role="tab" id="tab-soc" data-tab="soc" aria-controls="view-soc" aria-selected="false"><span class="dot" style="background:var(--pitch)"></span>Soccer</button>
       <button role="tab" id="tab-ff" data-tab="ff" aria-controls="view-ff" aria-selected="false"><span class="dot" style="background:var(--blue)"></span>Fantasy</button>
       <button role="tab" id="tab-bet" data-tab="bet" aria-controls="view-bet" aria-selected="false"><span class="dot" style="background:var(--ink)"></span>Bet builder</button>
     </nav>
@@ -275,6 +283,12 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
           <div class="record trk-stats"><div class="stat"><div class="v">—</div><div class="k">Loading</div></div></div>
           <div class="ledger"><table><thead><tr><th>Game day</th><th>Picks</th><th>Hit</th></tr></thead><tbody></tbody></table></div>
           <button class="go" data-goto="nfl">Open NFL picks</button>
+        </div>
+        <div class="boardcard tracker soc" id="trkSoc">
+          <div class="trk-head"><span class="lg SOC">SOCCER</span><span class="k">European nights</span></div>
+          <div class="record trk-stats"><div class="stat"><div class="v">—</div><div class="k">Loading</div></div></div>
+          <div class="ledger"><table><thead><tr><th>Match day</th><th>Picks</th><th>Hit</th></tr></thead><tbody></tbody></table></div>
+          <button class="go" data-goto="soc">Open soccer picks</button>
         </div>
       </div>
       <div class="legend"><span><i class="pip good"></i>Hit</span><span><i class="pip bad"></i>Missed</span><span><i class="pip pend"></i>Pending</span><span>Click a row to open that day's picks.</span></div>
@@ -330,6 +344,23 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
     <p class="foot">A probability is not a lock. Bet a pick only when the price implies a lower chance than mine, and avoid stacking picks that depend on the same game script into one parlay.</p>
   </section>
 
+  <!-- SOCCER -->
+  <section class="view" id="view-soc" role="tabpanel" aria-labelledby="tab-soc" hidden>
+    <div class="tabhead">
+      <div><h2>Soccer picks</h2><p id="socSub">Champions League and Europa League nights: a goal model for every match I analysed, my probability for each market and a three-leg parlay.</p></div>
+      <label class="pickday" for="socDay">Match day <select id="socDay" disabled><option>Loading…</option></select></label>
+    </div>
+    <div id="socMain"><div class="empty"><h2>No soccer sheet yet</h2><p>Picks appear on the morning of European match days.</p></div></div>
+    <div id="socRecordSec" hidden>
+      <p class="label">Soccer track record</p>
+      <div class="panel">
+        <div class="record" id="socRecord"></div>
+        <div class="ledger"><table><thead><tr><th>Day</th><th>#</th><th>Pick</th><th>Match</th><th>My prob.</th><th>Result</th></tr></thead><tbody id="socLedger"></tbody></table></div>
+      </div>
+    </div>
+    <p class="foot">Soccer moneylines are three-way: a draw loses a win bet. Draw-no-bet and double-chance markets protect against the draw at a lower price.</p>
+  </section>
+
   <!-- FANTASY -->
   <section class="view" id="view-ff" role="tabpanel" aria-labelledby="tab-ff" hidden>
     <div class="tabhead">
@@ -358,7 +389,8 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
           <div class="seg" role="group" aria-labelledby="lab-sport" data-key="sport">
             <button type="button" data-v="NHL">Hockey</button>
             <button type="button" data-v="NFL">Football</button>
-            <button type="button" data-v="both">Both</button>
+            <button type="button" data-v="SOC">Soccer</button>
+            <button type="button" data-v="both">All</button>
           </div>
         </div>
         <div class="fld">
@@ -386,7 +418,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
       </form>
       <div id="betOut" class="betout"><div class="empty"><h2>Loading picks</h2><p>The builder fills in once today's picks load.</p></div></div>
     </div>
-    <p class="foot">Each leg's probability comes from the same models as the NHL and NFL tabs. Parlay odds treat the legs as independent, and books add extra margin to parlays, so only bet when the book pays at least the fair price shown.</p>
+    <p class="foot">Each leg's probability comes from the same models as the NHL, NFL and Soccer tabs. Parlay odds treat the legs as independent, and books add extra margin to parlays, so only bet when the book pays at least the fair price shown.</p>
   </section>
 </div>
 
@@ -400,11 +432,11 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   const pct=(h,m)=>(h+m)?Math.round(h/(h+m)*100)+"%":"—";
   $("#todayStamp").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
 
-  let nights=[], nflDays=[], newsDays=[];
-  let nhlCur=store.get("gs-night"), nflCur=store.get("gs-nflday"), newsFilter="all";
+  let nights=[], nflDays=[], newsDays=[], socDays=[];
+  let nhlCur=store.get("gs-night"), nflCur=store.get("gs-nflday"), socCur=store.get("gs-socday"), newsFilter="all";
 
   /* ---------- tabs ---------- */
-  const TABS=["home","nhl","nfl","ff","bet"];
+  const TABS=["home","nhl","nfl","soc","ff","bet"];
   function show(tab,push){
     if(!TABS.includes(tab))tab="home";
     TABS.forEach(t=>{$("#view-"+t).hidden=t!==tab;$("#tab-"+t).setAttribute("aria-selected",String(t===tab));});
@@ -427,6 +459,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   const nflRes={"hit":["Hit","good"],"miss":["Missed","bad"],"push":["Push","pend"],"void":["Void","pend"],"pending":["Pending","pend"]};
   function nhlTally(){let gh=0,gm=0,sh=0,sm=0,ph=0,pm=0;nights.forEach(n=>{(n.picks||[]).forEach(p=>{if(p.result==="scored")gh++;else if(p.result==="no-goal")gm++;});(n.sogPicks||[]).forEach(p=>{if(p.result==="hit")sh++;else if(p.result==="miss")sm++;});(n.pointsPicks||[]).forEach(p=>{if(p.result==="hit")ph++;else if(p.result==="miss")pm++;});});return{gh,gm,sh,sm,ph,pm};}
   function nflTally(){let h=0,m=0;nflDays.forEach(d=>(d.picks||[]).forEach(p=>{if(p.result==="hit")h++;else if(p.result==="miss")m++;}));return{h,m};}
+  function socTally(){let h=0,m=0;socDays.forEach(d=>(d.picks||[]).forEach(p=>{if(p.result==="hit")h++;else if(p.result==="miss")m++;}));return{h,m};}
   function tdTally(){let h=0,m=0,n=0;nflDays.forEach(d=>(d.tdPicks||[]).forEach(p=>{n++;if(p.result==="hit")h++;else if(p.result==="miss")m++;}));return{h,m,n};}
 
   /* ---------- HOME ---------- */
@@ -454,12 +487,22 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
       const done=ps.filter(x=>pipCls(x.r)!=="pend"),hit=done.filter(x=>pipCls(x.r)==="good").length;
       return `<tr data-day="${esc(d.date)}" tabindex="0"><td>${esc(fmtDate(d.date))}${d.label?`<div class="kind">${esc(d.label)}</div>`:""}</td><td>${pips(ps)}</td><td class="hit">${done.length?`${hit}/${done.length}`:"—"}</td></tr>`;
     }).join(""):`<tr><td colspan="3">No game days yet.</td></tr>`;
+    // Soccer
+    const ts=$("#trkSoc"),so=socTally();
+    const sg=[];socDays.forEach(d=>(d.picks||[]).forEach(p=>{if(p.result==="hit"||p.result==="miss")sg.push(+p.prob||0)}));
+    const sexp=sg.length?Math.round(sg.reduce((a,b)=>a+b,0)/sg.length*100)+"%":"—";
+    ts.querySelector(".trk-stats").innerHTML=`<div class="stat"><div class="v">${so.h}–${so.m}</div><div class="k">Overall · ${pct(so.h,so.m)}</div></div><div class="stat"><div class="v">${sexp}</div><div class="k">Model expected</div></div><div class="stat"><div class="v">${socDays.length}</div><div class="k">Match days</div></div>`;
+    ts.querySelector("tbody").innerHTML=socDays.length?socDays.slice(0,10).map(d=>{
+      const ps=(d.picks||[]).slice().sort((a,b)=>a.rank-b.rank).map(p=>({r:p.result||"pending",label:p.pick}));
+      const done=ps.filter(x=>pipCls(x.r)!=="pend"),hit=done.filter(x=>pipCls(x.r)==="good").length;
+      return `<tr data-day="${esc(d.date)}" tabindex="0"><td>${esc(fmtDate(d.date))}${d.label?`<div class="kind">${esc(d.label)}</div>`:""}</td><td>${pips(ps)}</td><td class="hit">${done.length?`${hit}/${done.length}`:"—"}</td></tr>`;
+    }).join(""):`<tr><td colspan="3">No match days yet.</td></tr>`;
   }
   function openDay(tab,day){
-    if(tab==="nhl"){nhlCur=day;store.set("gs-night",day);renderNhl();}else{nflCur=day;store.set("gs-nflday",day);renderNfl();}
+    if(tab==="nhl"){nhlCur=day;store.set("gs-night",day);renderNhl();}else if(tab==="soc"){socCur=day;store.set("gs-socday",day);renderSoc();}else{nflCur=day;store.set("gs-nflday",day);renderNfl();}
     show(tab,true);window.scrollTo({top:0});
   }
-  [["#trkNhl","nhl"],["#trkNfl","nfl"]].forEach(([sel,tab])=>{
+  [["#trkNhl","nhl"],["#trkNfl","nfl"],["#trkSoc","soc"]].forEach(([sel,tab])=>{
     const tb=$(sel+" tbody");
     tb.addEventListener("click",e=>{const tr=e.target.closest("tr[data-day]");if(tr)openDay(tab,tr.dataset.day);});
     tb.addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tr[data-day]");if(tr){e.preventDefault();openDay(tab,tr.dataset.day);}});
@@ -595,6 +638,55 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   }
   $("#nflDay").addEventListener("change",e=>{nflCur=e.target.value;store.set("gs-nflday",nflCur);renderNfl();});
 
+  /* ---------- SOCCER ---------- */
+  const pc0=v=>Math.round((+v||0)*100)+"%";
+  function renderSocDay(d){
+    const main=$("#socMain");
+    if(!d){main.innerHTML=`<div class="empty"><h2>No soccer sheet yet</h2><p>Picks appear on the morning of European match days.</p></div>`;return;}
+    const slate=(d.slate||[]).map(g=>`<div class="game"><div class="m">${esc(g.home)}<em>vs</em>${esc(g.away)}</div><div class="t">${esc(g.comp||"")}${g.comp&&g.time?" · ":""}${esc(g.time||"")}${g.final?` · Final ${esc(g.final)}`:""}</div>${g.pH!=null?`<div class="xg"><span>Exp. goals <b>${(+g.lh).toFixed(2)}–${(+g.la).toFixed(2)}</b></span><span>Home ${pc0(g.pH)}</span><span>Draw ${pc0(g.pD)}</span><span>Away ${pc0(g.pA)}</span></div>`:""}${g.note?`<div class="n">${esc(g.note)}</div>`:""}</div>`).join("");
+    const picks=(d.picks||[]).slice().sort((a,b)=>a.rank-b.rank).map(p=>{
+      const pr=Math.max(0,Math.min(1,+p.prob||0));const r=p.result||"pending";const[t,c]=nflRes[r]||[r,"pend"];
+      return `<article class="np soc">
+        <div class="rank">${esc(p.rank)}</div>
+        <div class="body">
+          <div><h3>${esc(p.pick)}</h3><div class="ctx">${esc(p.game||"")}${p.market?` · ${esc(p.market)}`:""}${p.time?` · ${esc(p.time)}`:""}</div></div>
+          ${r!=="pending"?`<div class="chips"><span class="chip ${c}">${esc(t)}${p.actual?` · ${esc(p.actual)}`:""}</span></div>`:""}
+          <ul class="reasons">${(p.reasons||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+          ${p.watch?`<div class="watch"><b>What would break it:</b> ${esc(p.watch)}</div>`:""}
+        </div>
+        <div class="prob"><div class="pv">${Math.round(pr*100)}%</div><div class="bar" role="img" aria-label="${Math.round(pr*100)} percent"><i style="width:${(pr*100).toFixed(0)}%"></i></div>${p.fair?`<div class="fair">Bet at ${esc(p.fair)}</div>`:""}</div>
+      </article>`}).join("");
+    const pls=(d.parlays||[]).map(pl=>{const[pt,pcl]=nflRes[pl.result||"pending"]||[pl.result,"pend"];return `<div class="panel"><div class="proj" style="margin-bottom:10px"><span class="line">${esc(pl.title||"Parlay")} · ${(pl.legs||[]).length} legs · ${((+pl.prob||0)*100).toFixed(0)}%</span>${pl.fair?`<span class="foot" style="font-size:14px">Bet at ${esc(pl.fair)}</span>`:""}${(pl.result||"pending")!=="pending"?`<span class="chip ${pcl}">${esc(pt)}</span>`:""}</div><div class="ledger" style="margin:0"><table class="fftable"><thead><tr><th>Leg</th><th class="num">My prob.</th><th>Result</th></tr></thead><tbody>${(pl.legs||[]).map(l=>{const[lt,lc]=nflRes[l.result||"pending"]||[l.result,"pend"];return `<tr><td class="nm"><b>${esc(l.pick)}</b><span class="sub2">${esc(l.game||"")}</span></td><td class="num">${pc0(l.prob)}</td><td class="${lc}">${esc(lt)}${l.actual?` (${esc(l.actual)})`:""}</td></tr>`}).join("")}</tbody></table></div>${pl.note?`<p class="foot" style="margin-top:10px">${esc(pl.note)}</p>`:""}</div>`}).join("");
+    const fades=(d.fades||[]).map(f=>`<li><b>${esc(f.player)}</b>: ${esc(f.reason)}</li>`).join("");
+    main.innerHTML=`<div style="display:flex;flex-direction:column;gap:26px">
+      <div><p class="label">The matches I modelled · ${esc(d.label||fmtDate(d.date))}</p><div class="slate">${slate||'<div class="game"><div class="n">No matches listed.</div></div>'}</div></div>
+      ${pls?`<div style="display:flex;flex-direction:column;gap:14px"><p class="label" style="margin:0">Parlays</p>${pls}</div>`:""}
+      ${picks?`<div><p class="label">Every leg, most likely first</p><div class="nflpicks">${picks}</div></div>`:""}
+      <div class="cols"><div class="panel"><p class="label">Method and notes</p><p>${esc(d.notes||"Bet a pick only at the listed price or better.")}</p></div>
+      <div class="panel"><p class="label">Left off the list</p>${fades?`<ul class="fades">${fades}</ul>`:"<p>Nothing notable.</p>"}</div></div></div>`;
+    $("#socSub").textContent=d.generatedAt?`${d.label||"Match day"}: my probability for each market from a goal model, and the parlay. Last updated ${fmtStamp(d.generatedAt)}.`:"Champions League and Europa League nights: my probability for each market and a three-leg parlay.";
+  }
+  function renderSocRecord(){
+    const rows=[];socDays.forEach(d=>(d.picks||[]).forEach(p=>{const[t,c]=nflRes[p.result||"pending"]||[p.result,"pend"];rows.push({d:d.date,rank:p.rank,pick:p.pick,game:p.game||"",prob:p.prob,c,t:t+(p.actual?` (${p.actual})`:"")});}));
+    if(!rows.length){$("#socRecordSec").hidden=true;return;}
+    $("#socRecordSec").hidden=false;
+    const f=socTally();
+    const graded=[];socDays.forEach(d=>(d.picks||[]).forEach(p=>{if(p.result==="hit"||p.result==="miss")graded.push(+p.prob||0)}));
+    const exp=graded.length?Math.round(graded.reduce((a,b)=>a+b,0)/graded.length*100)+"%":"—";
+    let ph=0,pm=0;socDays.forEach(d=>(d.parlays||[]).forEach(p=>{if(p.result==="hit")ph++;else if(p.result==="miss")pm++;}));
+    $("#socRecord").innerHTML=`<div class="stat"><div class="v">${f.h}–${f.m}</div><div class="k">Legs · ${pct(f.h,f.m)} hit</div></div><div class="stat"><div class="v">${exp}</div><div class="k">Model expected</div></div><div class="stat"><div class="v">${ph}–${pm}</div><div class="k">Parlays</div></div><div class="stat"><div class="v">${socDays.length}</div><div class="k">Match days</div></div>`;
+    $("#socLedger").innerHTML=rows.slice(0,80).map(x=>`<tr><td>${esc(fmtDate(x.d))}</td><td>${esc(x.rank)}</td><td>${esc(x.pick)}</td><td>${esc(x.game)}</td><td>${x.prob!=null?Math.round(x.prob*100)+"%":"—"}</td><td class="${x.c}">${esc(x.t)}</td></tr>`).join("");
+  }
+  function renderSoc(){
+    const sel=$("#socDay");
+    if(!socDays.length){sel.innerHTML="<option>No match days yet</option>";sel.disabled=true;renderSocDay(null);renderSocRecord();return;}
+    if(!socCur||!socDays.find(d=>d.date===socCur))socCur=socDays[0].date;
+    sel.disabled=false;
+    sel.innerHTML=socDays.map(d=>`<option value="${esc(d.date)}"${d.date===socCur?" selected":""}>${esc(fmtDate(d.date))}${d.label?" · "+esc(d.label):""}</option>`).join("");
+    renderSocDay(socDays.find(d=>d.date===socCur));renderSocRecord();
+  }
+  $("#socDay").addEventListener("change",e=>{socCur=e.target.value;store.set("gs-socday",socCur);renderSoc();});
+
   /* ---------- FANTASY ---------- */
   let ffWeeks=[],ffCur=store.get("gs-ffweek"),ffPos=store.get("gs-ffpos")||"QB";
   const idxStyle=v=>{const d=Math.max(-1,Math.min(1,(v-1)/0.3));const c=d>=0?"var(--good)":"var(--bad)";const a=Math.round(Math.abs(d)*38);return `background:color-mix(in srgb, ${c} ${a}%, transparent);color:var(--ink)`;};
@@ -641,8 +733,9 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   $("#ffWeek").addEventListener("change",e=>{ffCur=e.target.value;store.set("gs-ffweek",ffCur);renderFf();});
 
   /* ---------- BET BUILDER ---------- */
-  const KINDS={NHL:[["all","Any"],["goal","Anytime goal"],["sog","Shots on goal"],["pts","Points"]],NFL:[["all","Any"],["prop","Player props"],["td","Anytime TD"]],both:[["all","Any"],["goal","NHL goal"],["sog","NHL shots"],["pts","NHL points"],["prop","NFL props"],["td","NFL TD"]]};
-  const KIND_LABEL={goal:"Goal",sog:"Shots",pts:"Points",prop:"Prop",td:"TD"};
+  const KINDS={NHL:[["all","Any"],["goal","Anytime goal"],["sog","Shots on goal"],["pts","Points"]],NFL:[["all","Any"],["prop","Player props"],["td","Anytime TD"]],SOC:[["all","Any"],["ml","Moneyline / result"],["goals","Goals markets"]],both:[["all","Any"],["goal","NHL goal"],["sog","NHL shots"],["pts","NHL points"],["prop","NFL props"],["td","NFL TD"],["ml","Soccer result"],["goals","Soccer goals"]]};
+  const KIND_LABEL={goal:"Goal",sog:"Shots",pts:"Points",prop:"Prop",td:"TD",ml:"Result",goals:"Goals"};
+  const SPORT_LABEL={NHL:"NHL",NFL:"NFL",SOC:"Soccer"};
   const PRESETS={straight:["-300","-200","-150","-110","+100","+150"],parlay:["+100","+150","+200","+300","+500","+1000"]};
   const bet={type:store.get("tb-type")||"parlay",sport:store.get("tb-sport")||"both",kinds:(store.get("tb-kinds")||"").split(",").filter(Boolean),odds:{straight:store.get("tb-odds-straight")||"-150",parlay:store.get("tb-odds-parlay")||"+250"},legs:store.get("tb-legs")||"auto",same:store.get("tb-same")==="1"};
   const MINUS=/[−–—]/g;
@@ -675,6 +768,12 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
       (d.picks||[]).forEach(p=>{if(banned.test(`${p.pick||""} ${p.market||""}`))return;add(p,"prop",p.pick);});
       (d.tdPicks||[]).forEach(p=>add(p,"td",`${p.player} anytime TD`));
     });
+    socDays.filter(d=>d.date>=now.date).forEach(d=>{
+      (d.picks||[]).forEach(p=>{if((p.result||"pending")!=="pending")return;
+        if(!live(d.date,p.time))return void started++;const pr=+p.prob;if(!(pr>0&&pr<1))return void noProb++;
+        const kind=p.kind==="ml"||/moneyline|result|draw no bet|double chance|to win/i.test(p.market||"")?"ml":"goals";
+        pool.push({sport:"SOC",kind,label:p.pick,player:p.pick,game:p.game||"",gkey:d.date+(p.game||""),date:d.date,time:p.time||"",prob:pr,why:(p.reasons||[])[0]||"",watch:p.watch||""});});
+    });
     return{pool,started,noProb};
   }
   function bestParlays(legs,q,sizes,allowSame){
@@ -700,7 +799,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
       used.add(k);out.push(f);if(out.length===3)break;}
     return{out,longest,maxP:L.length?null:0};
   }
-  const legRow=l=>`<li><span class="lg ${l.sport}">${l.sport} · ${KIND_LABEL[l.kind]}</span><div><div class="lt">${esc(l.label)}</div><div class="lm">${esc(l.game)}${l.time?` · ${esc(l.time)}`:""}${l.date!==etParts().date?` · ${esc(fmtDate(l.date))}`:""}</div></div><div class="lp"><b>${pc(l.prob,0)}</b><span>fair ${esc(toAm(l.prob))}</span></div>${l.why?`<div class="lw">${esc(l.why)}</div>`:""}</li>`;
+  const legRow=l=>`<li><span class="lg ${l.sport}">${SPORT_LABEL[l.sport]||l.sport} · ${KIND_LABEL[l.kind]}</span><div><div class="lt">${esc(l.label)}</div><div class="lm">${esc(l.game)}${l.time?` · ${esc(l.time)}`:""}${l.date!==etParts().date?` · ${esc(fmtDate(l.date))}`:""}</div></div><div class="lp"><b>${pc(l.prob,0)}</b><span>fair ${esc(toAm(l.prob))}</span></div>${l.why?`<div class="lw">${esc(l.why)}</div>`:""}</li>`;
   function slip({title,sub,legs,p,a,best,foot,warn}){
     const ev=p/impl(a)-1;
     return `<article class="slip${best?" best":""}">
@@ -730,7 +829,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
     const legs=pool.filter(l=>(bet.sport==="both"||l.sport===bet.sport)&&(bet.kinds.length===0||bet.kinds.includes(l.kind)));
     const meta=[];if(started)meta.push(`${started} pick${started>1?"s":""} skipped because the game already started`);if(noProb)meta.push(`${noProb} without a model probability`);
     const metaHtml=meta.length?`<p class="foot">${esc(meta.join(" · "))}.</p>`:"";
-    if(!legs.length){out.innerHTML=`<div class="empty"><h2>No open picks for that market</h2><p>Every matching pick has started or been graded. New NHL picks post around 3 PM and NFL picks on game-day mornings.</p></div>${metaHtml}`;return;}
+    if(!legs.length){out.innerHTML=`<div class="empty"><h2>No open picks for that market</h2><p>Every matching pick has started or been graded. New NHL picks post around 3 PM, NFL picks on game-day mornings and soccer picks on European match days.</p></div>${metaHtml}`;return;}
     if(bet.type==="straight"){
       const ok=legs.filter(l=>l.prob>=q).sort((x,y)=>(x.prob-y.prob));
       if(ok.length){
@@ -744,7 +843,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
       return;
     }
     const sizes=bet.legs==="auto"?[2,3,4,5,6]:[+bet.legs];
-    if(legs.length<Math.min(...sizes)){out.innerHTML=`<div class="notice">Only ${legs.length} open pick${legs.length>1?"s":""} match. Choose fewer legs, another kind of pick, or Both sports.</div>${metaHtml}`;return;}
+    if(legs.length<Math.min(...sizes)){out.innerHTML=`<div class="notice">Only ${legs.length} open pick${legs.length>1?"s":""} match. Choose fewer legs, another kind of pick, or All sports.</div>${metaHtml}`;return;}
     const r=bestParlays(legs,q,sizes,bet.same);
     if(r.out.length){
       out.innerHTML=`<p class="label" style="margin:0">Parlays that pay ${esc(fmtAm(a))} or more and are still worth it</p>`+
@@ -773,7 +872,7 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
   $("#betSame").addEventListener("change",e=>{bet.same=e.target.checked;saveBet();renderBet();});
   $("#betForm").addEventListener("submit",e=>e.preventDefault());
 
-  renderHome();renderNhl();renderNfl();renderFf();renderBet();
+  renderHome();renderNhl();renderNfl();renderSoc();renderFf();renderBet();
 
   /* ---------- data ---------- */
   // App version: picks come from data.json, which the daily sync publishes next to this page.
@@ -793,9 +892,10 @@ td.good{color:var(--good);font-weight:600}td.bad{color:var(--bad)}td.pend{color:
     nights=(d.nights||[]).slice().sort(byDate);
     nflDays=(d.nflDays||[]).slice().sort(byDate);
     newsDays=(d.news||[]).slice().sort(byDate);
+    socDays=(d.soccerDays||[]).slice().sort(byDate);
     ffWeeks=(d.fantasyWeeks||[]).slice().sort((a,b)=>(+b.week||0)-(+a.week||0));
     window.__tbLoaded=true;
-    renderHome();renderNhl();renderNfl();renderFf();renderBet();
+    renderHome();renderNhl();renderNfl();renderSoc();renderFf();renderBet();
     if(d.synced)$("#todayStamp").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})+" · picks synced "+fmtStamp(d.synced);
   }
   load();
