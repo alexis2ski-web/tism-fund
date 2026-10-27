@@ -2,7 +2,7 @@
 
 Usage: python3 -I tools/build_data.py <dump_dir> <output data.json>
 
-<dump_dir> holds the folders nights/, nflDays/, soccerDays/, news/ and fantasyWeeks/, each with one
+<dump_dir> holds the folders nights/, nflDays/, news/ and fantasyWeeks/, each with one
 JSON file per document, as written by ArtifactData list/query with out_dir.
 """
 import json
@@ -10,7 +10,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-LIMITS = {"nights": 60, "nflDays": 60, "soccerDays": 60, "news": 7, "fantasyWeeks": 20}
+LIMITS = {"nights": 60, "nflDays": 60, "news": 7, "fantasyWeeks": 20}
 
 
 def load(folder: Path, collection: str):

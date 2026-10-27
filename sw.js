@@ -1,6 +1,6 @@
 // tism fund offline worker: the app shell is cached; data.json always tries the network first
 // and falls back to the last copy, so the app opens with yesterday's picks when offline.
-const SHELL = "tism-shell-v2";
+const SHELL = "tism-shell-v3";
 const DATA = "tism-data";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES))); self.skipWaiting(); });
